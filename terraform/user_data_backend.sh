@@ -1,40 +1,31 @@
 #!/bin/bash
-set -e   # Arrêter le script si une commande échoue
+set -e
 
-# ── Mise à jour du système et installation des outils ──
-apt update -y
-apt install -y git nodejs npm
+# Mise à jour du système
+apt-get update -y
+apt-get upgrade -y
 
-# ── Cloner votre application ──
+# Installation de Node.js
+curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+apt-get install -y nodejs git
+
+# Cloner le repo
 cd /home/ubuntu
 git clone ${github_repo} app
-cd app
+cd app/backend
 
-# ── Installer les dépendances ──
-npm install
-
-# ── Injecter les variables d'environnement (jamais en dur dans le code !) ──
-export DB_HOST="${db_host}"
-export DB_NAME="${db_name}"
-export DB_USER="${db_username}"
-export DB_PASS="${db_password}"
-export PORT="${app_port}"
-export NODE_ENV="production"
-
-# ── Écrire les variables dans un fichier .env pour la persistance ──
-cat > /home/ubuntu/app/.env <<EOF
+# Créer le fichier .env avec les infos de la base de données
+cat > .env << EOF
 DB_HOST=${db_host}
 DB_NAME=${db_name}
 DB_USER=${db_username}
-DB_PASS=${db_password}
+DB_PASSWORD=${db_password}
 PORT=${app_port}
-NODE_ENV=production
 EOF
 
-# ── Démarrer l'application ──
-npm start &
-
-# ── (Optionnel) Installer PM2 pour une gestion plus robuste du processus ──
- #npm install -g pm2
- #pm2 start npm -- start
- #pm2 startup && pm2 save
+# Installer les dépendances et démarrer
+npm install
+npm install -g pm2
+pm2 start index.js --name backend
+pm2 startup
+pm2 save

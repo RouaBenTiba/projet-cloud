@@ -43,7 +43,7 @@ variable "my_ip" {
   description = "Votre IP publique pour autoriser le SSH (format : x.x.x.x/32)"
   type        = string
   # Pas de valeur par défaut — vous devez la fournir dans terraform.tfvars
-  default = "196.179.81.94/32"
+  default = "196.179.31.165/32"
 }
 
 variable "app_port" {
@@ -55,6 +55,7 @@ variable "app_port" {
 variable "github_repo" {
   description = "URL complète de votre dépôt GitHub (ex: https://github.com/user/repo.git)"
   type        = string
+  default     = "https://github.com/RouaBenTiba/projet-cloud.git"
 }
 
 # ── Variables RDS ──

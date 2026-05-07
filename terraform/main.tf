@@ -11,16 +11,11 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  # Les identifiants sont lus depuis les variables d'environnement :
-  # AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN
 }
 
-# ── Trouver automatiquement l'image Ubuntu 22.04 la plus récente ──
-# Au lieu de copier-coller un AMI ID qui change selon la région,
-# Terraform le trouve tout seul à chaque fois.
 data "aws_ami" "ubuntu" {
   most_recent = true
-  owners      = ["099720109477"] # Canonical (l'éditeur d'Ubuntu)
+  owners      = ["099720109477"]
 
   filter {
     name   = "name"
@@ -33,7 +28,6 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-# ── Enregistrer la clé SSH publique dans AWS ──
 resource "aws_key_pair" "deployer" {
   key_name   = var.key_pair_name
   public_key = file(var.public_key_path)
